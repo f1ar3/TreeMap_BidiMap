@@ -1,10 +1,10 @@
-package ru.vsu.cs.zagorodnev_g_a;
+package ru.vsu.cs.zagorodnev_g_a.TreeMapBidiMap;
 
-public class Node<T> implements Comparable{
+class Node<T extends Comparable>{
 
     private T value;
     private boolean red;
-    private Node left, right, parent;
+    private Node<T> left, right, parent;
 
     public Node(T value, boolean red, Node left, Node right, Node parent) {
         this.value = value;
@@ -20,6 +20,9 @@ public class Node<T> implements Comparable{
 
     public T getValue() {
         return value;
+    }
+    public void setValue(T value) {
+        this.value = value;
     }
 
     public boolean isRed() {
@@ -54,8 +57,4 @@ public class Node<T> implements Comparable{
         this.parent = parent;
     }
 
-    @Override
-    public int compareTo(Object o) {
-        return this.compareTo(o);
-    }
 }
