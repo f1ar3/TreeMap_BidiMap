@@ -11,7 +11,7 @@ public class TreeMap<K extends Comparable<K>, V> {
         return tree;
     }
 
-    public void put(K key, V value) {
+    public void add(K key, V value) {
         tree.add(new Entry(key, value));
     }
 
@@ -28,5 +28,22 @@ public class TreeMap<K extends Comparable<K>, V> {
             return true;
         }
         return false;
+    }
+
+    public String toString(){
+        StringBuilder str = new StringBuilder(" ");
+        if (tree.size() == 0) {
+            return "Map is empty";
+        }
+        else {
+            Entry entry = (Entry) tree.getRoot().getValue();
+            for (Object node :
+                    tree) {
+                str.append("Key: ").append(((Entry) ((Node) node).getValue()).getKey().toString())
+                        .append(" ; Value: ").append(((Entry) ((Node) node).getValue()).getValue().toString())
+                        .append("\n");
+            }
+            return String.valueOf(str);
+        }
     }
 }

@@ -1,8 +1,5 @@
 package ru.vsu.cs.zagorodnev_g_a.TreeMapBidiMap;
 
-import java.security.Key;
-import java.util.Comparator;
-
 public class Entry<K extends Comparable, V> implements Comparable<Entry> {
 
     private K key;

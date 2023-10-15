@@ -119,17 +119,17 @@ public class RedBlackTree<T extends Comparable<T>> implements Iterable {
     }
 
 
-    public Node getNode(Node<T> node1, T value) {
-        if (node1 == null) {
+    public Node getNode(Node<T> node, T value) {
+        if (node == null) {
             return null;
         }
-        int cmp = node1.getValue().compareTo(value);
+        int cmp = node.getValue().compareTo(value);
         if (cmp == 0) {
-            return node1;
+            return node;
         } else if (cmp > 0) {
-            return getNode(node1.getLeft(), value);
+            return getNode(node.getLeft(), value);
         } else {
-            return getNode(node1.getRight(), value);
+            return getNode(node.getRight(), value);
         }
     }
 
