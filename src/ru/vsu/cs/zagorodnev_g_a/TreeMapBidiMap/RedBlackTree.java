@@ -3,14 +3,14 @@ package ru.vsu.cs.zagorodnev_g_a.TreeMapBidiMap;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class RedBlackTree<T extends Comparable<T>> implements Iterable {
+public class RedBlackTree<T extends ComparableBy<K>, K extends Comparable<K>> implements Iterable {
 
     static final boolean RED = true;
     static final boolean BLACK = true;
-    private Node<T> root = null;
+    private Node<T,K> root = null;
     private int size = 0;
 
-    public Node getRoot() {
+    protected Node<T,K> getRoot() {
         return root;
     }
 
@@ -23,21 +23,21 @@ public class RedBlackTree<T extends Comparable<T>> implements Iterable {
         size = 0;
     }
 
-    private int getHeight(Node node) {
+    private int getHeight(Node<T,K> node) {
         return (node == null) ? -1 : Math.max(getHeight(node.getLeft()), getHeight(node.getRight())) + 1;
     }
 
     public int getHeight() {
         return getHeight(root);
     }
-    private void setRoot(Node node) {
+    private void setRoot(Node<T,K> node) {
         root = node;
         if (node != null) {
             node.setParent(null);
         }
     }
 
-    private void setLeft(Node node, Node left) {
+    private void setLeft(Node<T,K> node, Node<T,K> left) {
         if (node != null) {
             node.setLeft(left);
             if (left != null) {
@@ -46,7 +46,7 @@ public class RedBlackTree<T extends Comparable<T>> implements Iterable {
         }
     }
 
-    private void setRight(Node node, Node right) {
+    private void setRight(Node<T,K> node, Node<T,K> right) {
         if (node != null) {
             node.setRight(right);
             if (right != null) {
@@ -55,7 +55,7 @@ public class RedBlackTree<T extends Comparable<T>> implements Iterable {
         }
     }
 
-    private Node checkLeft(Node node) {
+    private Node<T,K> checkLeft(Node<T,K> node) {
         if (node != null) {
             return node.getLeft();
         } else {
@@ -63,7 +63,7 @@ public class RedBlackTree<T extends Comparable<T>> implements Iterable {
         }
     }
 
-    private Node checkRight(Node node) {
+    private Node<T,K> checkRight(Node<T,K> node) {
         if (node != null) {
             return node.getRight();
         } else {
@@ -71,7 +71,7 @@ public class RedBlackTree<T extends Comparable<T>> implements Iterable {
         }
     }
 
-    private Node checkParent(Node node) {
+    private Node<T,K> checkParent(Node<T,K> node) {
         if (node != null) {
             return node.getParent();
         } else {
@@ -79,7 +79,7 @@ public class RedBlackTree<T extends Comparable<T>> implements Iterable {
         }
     }
 
-    private Node checkGrandparent(Node node) {
+    private Node<T,K> checkGrandparent(Node<T,K> node) {
         if (node == null || node.getParent() == null) {
             return null;
         } else {
@@ -87,7 +87,7 @@ public class RedBlackTree<T extends Comparable<T>> implements Iterable {
         }
     }
 
-    private Node checkBrother(Node node) {
+    private Node<T,K> checkBrother(Node<T,K> node) {
         if (node == null || node.getParent() == null) {
             return null;
         } else if (node == node.getParent().getLeft()) {
@@ -97,12 +97,12 @@ public class RedBlackTree<T extends Comparable<T>> implements Iterable {
         }
     }
 
-    private void setColor(Node node, boolean red) {
+    private void setColor(Node<T,K> node, boolean red) {
         if (node != null) {
             node.setRed(red);
         }
     }
-    private boolean colorOfNode(Node node) {
+    private boolean colorOfNode(Node<T,K> node) {
         if (node == null) {
             return BLACK;
         } else {
@@ -110,20 +110,20 @@ public class RedBlackTree<T extends Comparable<T>> implements Iterable {
         }
     }
 
-    private boolean isRed(Node node) {
+    private boolean isRed(Node<T,K> node) {
         return colorOfNode(node) == RED;
     }
 
-    private boolean isBlack(Node node) {
+    private boolean isBlack(Node<T,K> node) {
         return colorOfNode(node) == BLACK;
     }
 
 
-    public Node getNode(Node<T> node, T value) {
+    protected Node<T,K> getNode(Node<T,K> node, K value) {
         if (node == null) {
             return null;
         }
-        int cmp = node.getValue().compareTo(value);
+        int cmp = node.getValue().getComparable().compareTo(value);
         if (cmp == 0) {
             return node;
         } else if (cmp > 0) {
@@ -133,7 +133,7 @@ public class RedBlackTree<T extends Comparable<T>> implements Iterable {
         }
     }
 
-    public Node getMinNode(Node node) {
+    private Node<T,K> getMinNode(Node<T,K> node) {
         if (node == null || node.getLeft() == null) {
             return node;
         } else {
@@ -141,16 +141,16 @@ public class RedBlackTree<T extends Comparable<T>> implements Iterable {
         }
     }
 
-    public void add(T value) {
-        Node newNode = new Node<>(value);
+    public void add(K value) {
+        Node<T,K> newNode = new Node<>(value);
         if (root == null) {
             setRoot(newNode);
             size++;
             return;
         }
-        Node node = root;
+        Node<T,K> node = root;
         while (true) {
-            int compare = value.compareTo((T) node.getValue());
+            int compare = value.compareTo(node.getValue().getComparable());
             if (compare < 0) {
                 if (node.getLeft() == null) {
                     setLeft(node,newNode);
@@ -175,7 +175,7 @@ public class RedBlackTree<T extends Comparable<T>> implements Iterable {
         }
     }
 
-    private void treeBalancingAfterAdd(Node node) {
+    private void treeBalancingAfterAdd(Node<T,K> node) {
         if (node != null) {
             node.setRed(RED);
         }
@@ -206,15 +206,15 @@ public class RedBlackTree<T extends Comparable<T>> implements Iterable {
         setColor(root, BLACK);
     }
 
-    public T remove(T value) {
-        Node node = getNode(getRoot(), value);
+    public T remove(K value) {
+        Node<T,K> node = getNode(getRoot(), value);
         if (node == null){
             return null;
         }
         T oldValue = (T) node.getValue();
         if (node.getLeft() != null && node.getRight() != null) {
-            Node nextValueNode = getMinNode(node.getRight());
-            node.setValue(nextValueNode.getValue());
+            Node<T,K> nextValueNode = getMinNode(node.getRight());
+            node.setValue((T) nextValueNode.getValue());
             node = nextValueNode;
         }
         Node child = (node.getLeft() != null) ? node.getLeft() : node.getRight();
@@ -243,7 +243,7 @@ public class RedBlackTree<T extends Comparable<T>> implements Iterable {
         return oldValue;
     }
 
-    private void removeFromParent(Node node) {
+    private void removeFromParent(Node<T,K> node) {
         if (node.getParent() != null) {
             if (node.getParent().getLeft() == node) {
                 node.getParent().setLeft(null);
@@ -254,10 +254,10 @@ public class RedBlackTree<T extends Comparable<T>> implements Iterable {
         }
     }
 
-    private void treeBalancingAfterRemove(Node node) {
+    private void treeBalancingAfterRemove(Node<T,K> node) {
         while (node != root && isBlack(node)) {
             if (node == checkLeft(checkParent(node))) {
-                Node brother = checkRight(checkParent(node));
+                Node<T,K> brother = checkRight(checkParent(node));
                 if (isRed(brother)) {
                     setColor(brother, BLACK);
                     setColor(checkParent(node), RED);
@@ -281,7 +281,7 @@ public class RedBlackTree<T extends Comparable<T>> implements Iterable {
                     node = root;
                 }
             } else {
-                Node brother = checkLeft(checkParent(node));
+                Node<T,K> brother = checkLeft(checkParent(node));
                 if (isRed(brother)) {
                     setColor(brother, BLACK);
                     setColor(checkParent(node), RED);
@@ -309,11 +309,11 @@ public class RedBlackTree<T extends Comparable<T>> implements Iterable {
         setColor(node, BLACK);
     }
 
-    private void leftRotate(Node node) {
+    private void leftRotate(Node<T,K> node) {
         if (node.getRight() == null) {
             return;
         }
-        Node right = node.getRight();
+        Node<T,K> right = node.getRight();
         setRight(node,right.getLeft());
         if (node.getParent() == null) {
             setRoot(right);
@@ -325,11 +325,11 @@ public class RedBlackTree<T extends Comparable<T>> implements Iterable {
         setLeft(right, node);
     }
 
-    private void rightRotate(Node node) {
+    private void rightRotate(Node<T,K> node) {
         if(node.getLeft() == null) {
             return;
         }
-        Node left = node.getLeft();
+        Node<T,K> left = node.getLeft();
         setLeft(node, left.getRight());
         if (node.getParent() == null) {
             setRoot(left);
@@ -346,11 +346,45 @@ public class RedBlackTree<T extends Comparable<T>> implements Iterable {
         return new TreeIterator(getRoot());
     }
 
+    public void add(T entryWrapper, K value) {
+        Node<T,K> newNode = new Node<>(entryWrapper,value);
+        if (root == null) {
+            setRoot(newNode);
+            size++;
+            return;
+        }
+        Node<T,K> node = root;
+        while (true) {
+            int compare = value.compareTo(node.getValue().getComparable());
+            if (compare < 0) {
+                if (node.getLeft() == null) {
+                    setLeft(node,newNode);
+                    size++;
+                    treeBalancingAfterAdd(node.getLeft());
+                    return;
+                }
+                node = node.getLeft();
+            } else if (compare > 0) {
+                if (node.getRight() == null) {
+                    setRight(node, newNode);
+                    size++;
+                    treeBalancingAfterAdd(node.getRight());
+                    return;
+                }
+                node = node.getRight();
+            }
+            else if (compare == 0){
+                node.setValue(value);
+                return;
+            }
+        }
+    }
+
     class TreeIterator implements Iterator {
 
-        private Node next;
+        private Node<T,K> next;
 
-        public TreeIterator(Node root) {
+        public TreeIterator(Node<T,K> root) {
             next = root;
             if (next == null)
                 return;
@@ -368,7 +402,7 @@ public class RedBlackTree<T extends Comparable<T>> implements Iterable {
         public Object next() {
 
             if (!hasNext()) throw new NoSuchElementException();
-            Node r = next;
+            Node<T,K> r = next;
             if (next.getRight() != null) {
                 next = next.getRight();
                 while (next.getLeft() != null)

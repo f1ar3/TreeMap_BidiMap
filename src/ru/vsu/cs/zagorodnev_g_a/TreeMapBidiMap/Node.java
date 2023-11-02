@@ -1,10 +1,10 @@
 package ru.vsu.cs.zagorodnev_g_a.TreeMapBidiMap;
 
-class Node<T extends Comparable>{
+class Node<T extends ComparableBy<K>, K extends Comparable<K>>{
 
     private T value;
     private boolean red;
-    private Node<T> left, right, parent;
+    private Node<T,K> left, right, parent;
 
     public Node(T value, boolean red, Node left, Node right, Node parent) {
         this.value = value;

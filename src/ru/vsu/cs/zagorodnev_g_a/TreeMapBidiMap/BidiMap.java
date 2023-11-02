@@ -2,62 +2,78 @@ package ru.vsu.cs.zagorodnev_g_a.TreeMapBidiMap;
 
 public class BidiMap<K extends Comparable<K>, V extends Comparable<V>>{
 
-    private final RedBlackTree keysTree  = new RedBlackTree();
-    private final RedBlackTree valuesTree = new RedBlackTree();
+    private class EntryWrapperK implements ComparableBy<K> {
+        private Entry<K,V> e;
+
+        public EntryWrapperK(Entry<K,V> e) {
+            this.e = e;
+        }
+        @Override
+        public K getComparable() {
+            return e.getKey();
+        }
+    }
+
+    private class EntryWrapperV implements ComparableBy<V> {
+        private Entry<K,V> e;
+
+        public EntryWrapperV(Entry<K,V> e) {
+            this.e = e;
+        }
+        @Override
+        public V getComparable() {
+            return e.getValue();
+        }
+    }
+    private final RedBlackTree<EntryWrapperK,K> keysTree  = new RedBlackTree<>();
+    private final RedBlackTree<EntryWrapperV,V> valuesTree = new RedBlackTree<>();
 
     public BidiMap(){
     }
 
-    public RedBlackTree getKeysTree() {
-        return keysTree;
-    }
-
-    public RedBlackTree getValuesTree() {
-        return valuesTree;
-    }
-
     public void add(K key, V value){
         if (containsKey(key)) {
-            V oldValue = (V) ((Entry) keysTree.getNode(keysTree.getRoot(), new Entry(key, null)).getValue()).getValue();
-            valuesTree.remove(new Entry(oldValue, null));
+            V oldValue = keysTree.getNode(keysTree.getRoot(), key).getValue().e.getValue();
+            valuesTree.remove(oldValue);
         }
         if (containsValue(value)){
-            K oldKey = (K) ((Entry) valuesTree.getNode(valuesTree.getRoot(), new Entry(value, null)).getValue()).getValue();
-            keysTree.remove(new Entry(oldKey, null));
+            K oldKey = valuesTree.getNode(valuesTree.getRoot(), value).getValue().e.getKey();
+            keysTree.remove(oldKey);
         }
-        keysTree.add(new Entry(key, value));
-        valuesTree.add(new Entry(value, key));
+        Entry<K,V> entry = new Entry<>(key,value);
+        keysTree.add(new EntryWrapperK(entry), entry.getKey());
+        valuesTree.add(new EntryWrapperV(entry),entry.getValue());
     }
 
     public K getKey(V value){
-        return (K) (((Entry) valuesTree.getNode(valuesTree.getRoot(), new Entry(value, null)).getValue())).getValue();
+        return valuesTree.getNode(valuesTree.getRoot(), value).getValue().e.getKey();
     }
 
     public V getValue(K key){
-        return (V) (((Entry) keysTree.getNode(keysTree.getRoot(), new Entry(key, null)).getValue())).getValue();
+        return keysTree.getNode(keysTree.getRoot(), key).getValue().e.getValue();
     }
 
     public V removeByKey(K key){
-        V value = (V) ((Entry) keysTree.remove(new Entry(key, null))).getValue();
-        valuesTree.remove(new Entry(value, null));
+        V value = keysTree.remove(key).e.getValue();
+        valuesTree.remove(value);
         return value;
     }
 
     public K removeByValue(V value){
-        K key = (K) ((Entry) valuesTree.remove(new Entry(value, null))).getValue();
-        keysTree.remove(new Entry(key, null));
+        K key = valuesTree.remove(value).e.getKey();
+        keysTree.remove(key);
         return key;
     }
 
     public boolean containsKey(K key){
-        if (keysTree.getNode(keysTree.getRoot(), new Entry(key, null)) != null){
+        if (keysTree.getNode(keysTree.getRoot(), key) != null){
             return true;
         }
         return false;
     }
 
     public boolean containsValue(V value){
-        if (valuesTree.getNode(valuesTree.getRoot(), new Entry(value, null)) != null){
+        if (valuesTree.getNode(valuesTree.getRoot(), value) != null){
             return true;
         }
         return false;
@@ -70,8 +86,7 @@ public class BidiMap<K extends Comparable<K>, V extends Comparable<V>>{
         }
         else {
             Entry entry = (Entry) keysTree.getRoot().getValue();
-            for (Object node :
-                    keysTree) {
+            for (Object node : keysTree) {
                 str.append("Key: ").append(((Entry) ((Node) node).getValue()).getKey().toString())
                         .append(" ; Value: ").append(((Entry) ((Node) node).getValue()).getValue().toString())
                         .append("\n");

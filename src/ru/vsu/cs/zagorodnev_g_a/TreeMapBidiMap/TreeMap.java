@@ -4,13 +4,6 @@ public class TreeMap<K extends Comparable<K>, V> {
 
     private final RedBlackTree tree = new RedBlackTree();
 
-    public TreeMap() {
-    }
-
-    public RedBlackTree getTree() {
-        return tree;
-    }
-
     public void add(K key, V value) {
         tree.add(new Entry(key, value));
     }
