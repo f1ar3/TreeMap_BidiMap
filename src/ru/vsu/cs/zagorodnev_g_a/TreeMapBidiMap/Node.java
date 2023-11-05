@@ -6,7 +6,7 @@ class Node<T extends ComparableBy<K>, K extends Comparable<K>>{
     private boolean red;
     private Node<T,K> left, right, parent;
 
-    public Node(T value, boolean red, Node left, Node right, Node parent) {
+    public Node(T value, boolean red, Node<T,K> left, Node<T,K> right, Node<T,K> parent) {
         this.value = value;
         this.red = red;
         this.left = left;
@@ -33,27 +33,27 @@ class Node<T extends ComparableBy<K>, K extends Comparable<K>>{
         this.red = red;
     }
 
-    public Node getLeft() {
+    public Node<T,K> getLeft() {
         return left;
     }
 
-    public void setLeft(Node left) {
+    public void setLeft(Node<T,K> left) {
         this.left = left;
     }
 
-    public Node getRight() {
+    public Node<T,K> getRight() {
         return right;
     }
 
-    public void setRight(Node right) {
+    public void setRight(Node<T,K> right) {
         this.right = right;
     }
 
-    public Node getParent() {
+    public Node<T,K> getParent() {
         return parent;
     }
 
-    public void setParent(Node parent) {
+    public void setParent(Node<T,K> parent) {
         this.parent = parent;
     }
 

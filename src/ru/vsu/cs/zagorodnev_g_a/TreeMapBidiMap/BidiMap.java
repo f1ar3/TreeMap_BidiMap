@@ -3,7 +3,7 @@ package ru.vsu.cs.zagorodnev_g_a.TreeMapBidiMap;
 public class BidiMap<K extends Comparable<K>, V extends Comparable<V>>{
 
     private class EntryWrapperK implements ComparableBy<K> {
-        private Entry<K,V> e;
+        private final Entry<K,V> e;
 
         public EntryWrapperK(Entry<K,V> e) {
             this.e = e;
@@ -15,7 +15,7 @@ public class BidiMap<K extends Comparable<K>, V extends Comparable<V>>{
     }
 
     private class EntryWrapperV implements ComparableBy<V> {
-        private Entry<K,V> e;
+        private final Entry<K,V> e;
 
         public EntryWrapperV(Entry<K,V> e) {
             this.e = e;
@@ -41,8 +41,8 @@ public class BidiMap<K extends Comparable<K>, V extends Comparable<V>>{
             keysTree.remove(oldKey);
         }
         Entry<K,V> entry = new Entry<>(key,value);
-        keysTree.add(new EntryWrapperK(entry), entry.getKey());
-        valuesTree.add(new EntryWrapperV(entry),entry.getValue());
+        keysTree.add(new EntryWrapperK(entry));
+        valuesTree.add(new EntryWrapperV(entry));
     }
 
     public K getKey(V value){
@@ -85,7 +85,6 @@ public class BidiMap<K extends Comparable<K>, V extends Comparable<V>>{
             return "Map is empty";
         }
         else {
-            Entry entry = (Entry) keysTree.getRoot().getValue();
             for (Object node : keysTree) {
                 str.append("Key: ").append(((Entry) ((Node) node).getValue()).getKey().toString())
                         .append(" ; Value: ").append(((Entry) ((Node) node).getValue()).getValue().toString())

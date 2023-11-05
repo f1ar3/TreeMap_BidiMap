@@ -141,7 +141,7 @@ public class RedBlackTree<T extends ComparableBy<K>, K extends Comparable<K>> im
         }
     }
 
-    public void add(K value) {
+    public void add(T value) {
         Node<T,K> newNode = new Node<>(value);
         if (root == null) {
             setRoot(newNode);
@@ -150,7 +150,7 @@ public class RedBlackTree<T extends ComparableBy<K>, K extends Comparable<K>> im
         }
         Node<T,K> node = root;
         while (true) {
-            int compare = value.compareTo(node.getValue().getComparable());
+            int compare = value.getComparable().compareTo(node.getValue().getComparable());
             if (compare < 0) {
                 if (node.getLeft() == null) {
                     setLeft(node,newNode);
@@ -211,13 +211,13 @@ public class RedBlackTree<T extends ComparableBy<K>, K extends Comparable<K>> im
         if (node == null){
             return null;
         }
-        T oldValue = (T) node.getValue();
+        T oldValue = node.getValue();
         if (node.getLeft() != null && node.getRight() != null) {
             Node<T,K> nextValueNode = getMinNode(node.getRight());
-            node.setValue((T) nextValueNode.getValue());
+            node.setValue(nextValueNode.getValue());
             node = nextValueNode;
         }
-        Node child = (node.getLeft() != null) ? node.getLeft() : node.getRight();
+        Node<T,K> child = (node.getLeft() != null) ? node.getLeft() : node.getRight();
         if (child != null) {
             if (node == root) {
                 setRoot(child);
@@ -344,40 +344,6 @@ public class RedBlackTree<T extends ComparableBy<K>, K extends Comparable<K>> im
     @Override
     public Iterator iterator() {
         return new TreeIterator(getRoot());
-    }
-
-    public void add(T entryWrapper, K value) {
-        Node<T,K> newNode = new Node<>(entryWrapper,value);
-        if (root == null) {
-            setRoot(newNode);
-            size++;
-            return;
-        }
-        Node<T,K> node = root;
-        while (true) {
-            int compare = value.compareTo(node.getValue().getComparable());
-            if (compare < 0) {
-                if (node.getLeft() == null) {
-                    setLeft(node,newNode);
-                    size++;
-                    treeBalancingAfterAdd(node.getLeft());
-                    return;
-                }
-                node = node.getLeft();
-            } else if (compare > 0) {
-                if (node.getRight() == null) {
-                    setRight(node, newNode);
-                    size++;
-                    treeBalancingAfterAdd(node.getRight());
-                    return;
-                }
-                node = node.getRight();
-            }
-            else if (compare == 0){
-                node.setValue(value);
-                return;
-            }
-        }
     }
 
     class TreeIterator implements Iterator {
