@@ -45,24 +45,23 @@ public class TreeMap<K extends Comparable<K>, V extends Comparable<V>> {
     }
 
     public boolean containsKey(K key) {
-        if (keysTree.getNode(keysTree.getRoot(), key) != null){
-            return true;
-        }
-        return false;
+        return keysTree.getNode(keysTree.getRoot(), key) != null;
     }
 
-    public String toString(){
-        StringBuilder str = new StringBuilder(" ");
-        if (keysTree.size() == 0) {
-            return "Map is empty";
-        }
-        else {
-            for (Object node : keysTree) {
-                str.append("Key: ").append(((Entry) ((Node) node).getValue()).getKey().toString())
-                        .append(" ; Value: ").append(((Entry) ((Node) node).getValue()).getValue().toString())
-                        .append("\n");
-            }
-            return String.valueOf(str);
-        }
-    }
+//    public String toString(){
+//        StringBuilder str = new StringBuilder(" ");
+//        if (keysTree.size() == 0) {
+//            return "Map is empty";
+//        }
+//        else {
+//           // Entry<K,V> entry = new Entry<>(keysTree.getRoot().getValue().e.getKey(),valuesTree.getRoot().getValue().e.getValue());
+//
+//            for (entry : keysTree) {
+//                str.append("Key: ").append(((Entry) ((Node) node).getValue()).getKey().toString())
+//                        .append(" ; Value: ").append(((Entry) ((Node) node).getValue()).getValue().toString())
+//                        .append("\n");
+//            }
+//            return String.valueOf(str);
+//        }
+//    }
 }

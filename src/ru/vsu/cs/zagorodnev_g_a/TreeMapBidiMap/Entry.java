@@ -1,6 +1,6 @@
 package ru.vsu.cs.zagorodnev_g_a.TreeMapBidiMap;
 
-public class Entry<K extends Comparable, V> implements Comparable<Entry> {
+public class Entry<K extends Comparable<K>, V> implements Comparable<Entry<K,V>> {
 
     private K key;
     private V value;
@@ -29,7 +29,7 @@ public class Entry<K extends Comparable, V> implements Comparable<Entry> {
     public String toString(){return "key: " + key + " , value: " + value;}
 
     @Override
-    public int compareTo(Entry o) {
-        return this.key.compareTo(o.key);
+    public int compareTo(Entry<K,V> o) {
+        return this.key.compareTo(o.getKey());
     }
 }

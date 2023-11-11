@@ -3,7 +3,7 @@ package ru.vsu.cs.zagorodnev_g_a.TreeMapBidiMap;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class RedBlackTree<T extends ComparableBy<K>, K extends Comparable<K>> implements Iterable {
+public class RedBlackTree<T extends ComparableBy<K>, K extends Comparable<K>> implements Iterable<T> {
 
     static final boolean RED = true;
     static final boolean BLACK = true;
@@ -167,8 +167,7 @@ public class RedBlackTree<T extends ComparableBy<K>, K extends Comparable<K>> im
                     return;
                 }
                 node = node.getRight();
-            }
-            else if (compare == 0){
+            } else {
                 node.setValue(value);
                 return;
             }
@@ -342,11 +341,11 @@ public class RedBlackTree<T extends ComparableBy<K>, K extends Comparable<K>> im
     }
 
     @Override
-    public Iterator iterator() {
+    public Iterator<T> iterator() {
         return new TreeIterator(getRoot());
     }
 
-    class TreeIterator implements Iterator {
+    class TreeIterator implements Iterator<T> {
 
         private Node<T,K> next;
 
@@ -365,7 +364,7 @@ public class RedBlackTree<T extends ComparableBy<K>, K extends Comparable<K>> im
         }
 
         @Override
-        public Object next() {
+        public T next() {
 
             if (!hasNext()) throw new NoSuchElementException();
             Node<T,K> r = next;
@@ -373,17 +372,17 @@ public class RedBlackTree<T extends ComparableBy<K>, K extends Comparable<K>> im
                 next = next.getRight();
                 while (next.getLeft() != null)
                     next = next.getLeft();
-                return r;
+                return r.getValue();
             }
 
             while (true) {
                 if (next.getParent() == null) {
                     next = null;
-                    return r;
+                    return r.getValue();
                 }
                 if (next.getParent().getLeft() == next) {
                     next = next.getParent();
-                    return r;
+                    return r.getValue();
                 }
                 next = next.getParent();
             }

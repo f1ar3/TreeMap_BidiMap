@@ -22,7 +22,7 @@ public class TreeMapTest {
         treeMap.add(31, "dbd");
         assertTrue(treeMap.containsKey(15));
         assertTrue(treeMap.containsKey(20));
-        assertEquals("dbd", (String) treeMap.getValue(31));
+        assertEquals("dbd", treeMap.getValue(31));
     }
 
     @Test
